@@ -1,2 +1,2 @@
 # tic-tac-toe
-Exactly what you'd imagine
+Exactly what you'd imagine.
