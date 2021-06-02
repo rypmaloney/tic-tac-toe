@@ -1,12 +1,7 @@
 //MODULE 1: FUNCTIONS THAT CREATE AND DESTROY THE GAME BOARD
 const boardController = (function () {
-
             const container = document.getElementById('container');
-
             let gameBoard = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-
-
             function createBoard() {
                 resetBoard()
                 for (i = 0; i < gameBoard.length; i++) {
@@ -14,12 +9,9 @@ const boardController = (function () {
                     gameSquare.setAttribute('id', `${i + 1}`);
                     gameSquare.classList.add('box');
                     container.appendChild(gameSquare);
-
                 }
-                
                     }
-                
-
+    
                 function updateBoard(player, position) {
                     let newBoard
                     let newMark = gameBoard.indexOf(position)
@@ -38,26 +30,13 @@ const boardController = (function () {
                     }
                 }
 
-                function resetGame() {
-                    resetBoard()
-                    createBoard()
-                    boardController.gameBoard = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-                    gameFlow.playerArrayReset()
-                }
-
-
                 createBoard()
-              
-
                 return {
                     createBoard,
-                    resetGame,
                     updateBoard,
                     gameBoard
                 }
             })()
-
-
 
         //MODULE 2: FUNCTIONS THAT KEEP SCORE AND CONTROL FLOW OF GAME
         const gameFlow = (function () {
@@ -70,28 +49,14 @@ const boardController = (function () {
                        [3, 6, 9],
                        [1, 5, 9],
                        [3, 5, 7]];
-
-            function playerArrayReset() {
-
-                gameFlow.playerArray = [[1, 2, 3],
-                       [4, 5, 6],
-                       [7, 8, 9],
-                       [1, 4, 7],
-                       [2, 5, 8],
-                       [3, 6, 9],
-                       [1, 5, 9],
-                       [3, 5, 7]];
-            }
-
+            
             function fetchComputerOptions() {
                 let computerOptions = playerArray;
                 return computerOptions;
             }
-
             function celebrateWinner(winner) {
                 DOMController.roundAnnounce.textContent = `${winner} won the game!`
             }
-
             function checkForWinner() {
                 let tieCount = 0
                 for (i = 0; i < playerArray.length; i++) {
@@ -99,21 +64,20 @@ const boardController = (function () {
                         playerArray[i][1] === 'x' &&
                         playerArray[i][2] === 'x') {
                         celebrateWinner('X')
-
-
-
+                        document.getElementById('container').style.pointerEvents = 'none';
                     } else if (playerArray[i][0] === 'o' &&
                         playerArray[i][1] === 'o' &&
                         playerArray[i][2] === 'o') {
                         celebrateWinner('O')
-
-
+                        document.getElementById('container').style.pointerEvents = 'none';
                     } else if (playerArray[i].includes('x') && playerArray[i].includes('o')) {
                         tieCount++
                     }
                 }
+                
                 if (tieCount > 7) {
                     DOMController.roundAnnounce.textContent = 'Tie, restart the game.'
+                    document.getElementById('container').style.pointerEvents = 'none';
 
                 }
             }
@@ -122,11 +86,6 @@ const boardController = (function () {
                 currentTurn = currentTurn === 'x' ? 'o' : 'x';
                 DOMController.roundAnnounce.textContent = `${currentTurn.toUpperCase()} Turn`;
             }
-
-
-
-
-
             function playerTurn() {
                 let markPosition;
                 let boxes = DOMController.boxes;
@@ -140,7 +99,6 @@ const boardController = (function () {
                                 playerArray[i].splice(turnPos, 1, `${currentTurn}`)
                             }
                         }
-
                         boardController.updateBoard(currentTurn, markPosition);
                         changeTurn();
                         checkForWinner();
@@ -148,20 +106,14 @@ const boardController = (function () {
                     }, false)
                 }
             }
-
             return {
                 playerTurn,
                 fetchComputerOptions,
-                playerArrayReset,
                 checkForWinner,
                 playerArray
 
-
-
             }
         })()
-
-
 
         //MODULE 3: DOM ELEMENTS
         const DOMController = (function () {
@@ -169,28 +121,21 @@ const boardController = (function () {
             const roundAnnounce = document.createElement('p')
             roundAnnounce.classList.add('annoucement');
             scoreBoard.appendChild(roundAnnounce);
-            roundAnnounce.textContent = '';
-
+            roundAnnounce.textContent = 'Hit start to begin';
             const resetBtn = document.getElementById('reset')
             resetBtn.addEventListener('click', () => {
                 location.reload()
             })
-
             const startBtn = document.getElementById('start');
             startBtn.addEventListener('click', () => {
                 gameFlow.playerTurn();
                 roundAnnounce.textContent = 'X Turn';
+                startBtn.style.pointerEvents = 'none';
             })
-
             const boxes = document.querySelectorAll(".box");
-
-
-
-
             return {
                 roundAnnounce,
                 boxes,
-
             }
         })()
 
